@@ -7,6 +7,10 @@ import telebot
 import time
 bot = telebot.TeleBot("Enter Telegram API Key")
 
+nowdate = date.today().strftime("%d-%m-%Y")
+headers = {
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'
+    }
 
 
 datass = """Select district by number:
@@ -46,39 +50,39 @@ datass = """Select district by number:
 369 Washim
 368 Yavatmal"""
 
+def daterange(n):
+    hh = [0]
+    for i in hh:
+        start_date = date.today()
+        yield start_date + timedelta(i)
 
 print(datass)
 
 cid = "ENTER YOUR CID WITHOUT QUOTES HERE"
-
+oldtp = ""
 district = int(input())
 while True:
-    start_date = date.today()
-    newss = ""
-    datenow = start_date.strftime("%d-%m-%Y")
-    print(datenow)
-    response = requests.get('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id='+str(district)+'&date='+datenow)
-    jsonr = response.json()
-    sur = {}
-    data = jsonr['centers']
-    for center in data:
-        avl = 0
-        flag = 0
-        sessions = center['sessions']
-        for session in sessions:
-            if session['min_age_limit'] != 45:
-                flag = 1
-                #if center['center_id'] == 583116:
-                avl = avl + int(session['available_capacity'])
-                sesdate = session['date']
-        if flag == 1:
-            if avl == 0:
-                tp = "\t {:<25}".format(center['name']) + '\t Available : ' + str(avl) 
-                #bot.send_message(781902529, tp)
-                newss = newss + tp
-            else:
-                tp = "\t {:<25}".format(center['name']) + '\t Available : ' + str(avl) + ' on ' + sesdate 
-                bot.send_message(cid, tp)
-    #bot.send_message(781902529, newss)
-    print(datetime.now())
+    try:
+        for single_date in daterange(10):
+            newss = ""
+            datenow = single_date.strftime("%d-%m-%Y")
+            print(datenow)
+            response = requests.get('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id='+str(district)+'&date='+datenow , headers=headers)
+            jsonr = response.json()
+            data = jsonr['centers']
+            for center in data:
+                if PINCODE1 < center['pincode'] < PINCODE2:   #Replace PINCODES
+                    sessions = center['sessions']
+                    for session in sessions:
+                        if session['min_age_limit'] != 45 and session['available_capacity'] > 0:
+                            avl = int(session['available_capacity'])
+                            sesdate = session['date']
+                            tp = "\t {:<25}".format(center['name']) + '\t Available : ' + str(avl) + ' on ' + sesdate
+                            print(tp)
+                            if oldtp!=tp :
+                                bot.send_message(cid, tp)
+                                oldtp = tp
+            print(datetime.now())
+    except Exception as e:
+        print(e)
     time.sleep(60)

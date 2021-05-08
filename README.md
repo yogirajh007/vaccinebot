@@ -9,5 +9,5 @@ Then use getcid.py to get cid of conversatin between you and the bot.
 
 
 Replace cid and Token in yourbot.py
-
+Replace line 79 in yourbot.py with desired pincodes
 
