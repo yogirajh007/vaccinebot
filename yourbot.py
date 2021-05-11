@@ -5,7 +5,7 @@ import pprint
 from datetime import date,timedelta,datetime
 import telebot
 import time
-bot = telebot.TeleBot("Enter Telegram API Key")
+bot = telebot.TeleBot("Enter Telegram bot token")
 
 nowdate = date.today().strftime("%d-%m-%Y")
 headers = {
