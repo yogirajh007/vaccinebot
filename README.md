@@ -13,5 +13,7 @@ Replace line 79 in yourbot.py with desired pincodes
 
 Keep the script running in backgroup by running:
 
-nohup python3 yourbot.py &
+```console
+foo@bar:~$ nohup python3 yourbot.py &
+```
 
