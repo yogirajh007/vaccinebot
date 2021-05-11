@@ -28,4 +28,11 @@ After that:
 foo@bar:~$ nohup python3 yourbot.py &
 ```
 
+To kill the bot,
+
+```console
+foo@bar:~$ pkill -f yourbot
+```
+
+As the script needs to be running for getting notification, you can add a cron-job or can start and stop the script manually. Usually the slots are created in the evening after 5-6PM IST
 
